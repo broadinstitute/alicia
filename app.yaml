@@ -7,6 +7,8 @@ basic_scaling:
 libraries:
 - name: pycrypto
   version: 'latest'
+- name: ssl
+  version: 2.7.11
 
 handlers:
 - url: /api/.*
