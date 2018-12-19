@@ -9,12 +9,12 @@ class JsonField(messages.StringField):
 
 
 class KeyValuePair(messages.Message):
-    key = message_types.StringField(1)
-    value = message_types.StringField(2)
+    key = messages.StringField(1)
+    value = messages.StringField(2)
 
 
 class UserPairs(messages.Message):
-    userId = message_types.StringField(1)
+    userId = messages.StringField(1)
     keyValuePairs = messages.MessageField(KeyValuePair, 2, repeated=True)
 
 
