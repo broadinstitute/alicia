@@ -48,7 +48,7 @@ class AliciaAPI(remote.Service):
         name='listPairs'
     )
     def listPairs(self, request):
-        pass
+        return ListUserPairs(data=[UserPairs(userId='1', keyValuePairs=[KeyValuePair(key='hello', value='world')])])
 
     @endpoints.method(
         ADD_PAIR_RESOURCE,
