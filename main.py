@@ -89,3 +89,5 @@ class AliciaAPI(remote.Service):
     )
     def deleteKey(self, request):
         pass
+
+api = endpoints.api_server([AliciaAPI])
