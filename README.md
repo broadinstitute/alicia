@@ -20,9 +20,14 @@ You may now run tests or run the application server normally.
 
 When you are ready to exit or deactivate your Alicia virtualenv, just type the command `deactivate` on your command line.
 
-### Google Endpoints Set Up
+### Starting the Server
 
 The first time you run the server, you will need to run the following command to generate the OpenAPI config:
 ```aidl
 python lib/endpoints/endpointscfg.py get_openapi_spec main.AliciaAPI --hostname broad-alicia-dev.appspot.com
+```
+
+Then to start the server, run:
+```
+dev_appserver.py ./app.yaml
 ```

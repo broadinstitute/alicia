@@ -35,7 +35,7 @@ GET_KEY_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1, re
                                                key=messages.StringField(2, required=True))
 
 
-@endpoints.api(name='link', version='v1', base_path="/api/")
+@endpoints.api(name='alicia', version='v1', base_path="/api/")
 class AliciaAPI(remote.Service):
     def __init__(self):
         pass
