@@ -2,6 +2,7 @@ import endpoints
 from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
+import logging
 
 
 class JsonField(messages.StringField):
@@ -21,6 +22,8 @@ class UserPairs(messages.Message):
 class ListUserPairs(messages.Message):
     data = messages.MessageField(UserPairs, 1, repeated=True)
 
+
+WRITE_USER_RESOURCE = endpoints.ResourceContainer(foo=messages.StringField(1))
 
 LIST_PAIRS_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1),
                                                   key=messages.StringField(2),
@@ -51,14 +54,27 @@ class AliciaAPI(remote.Service):
         return ListUserPairs(data=[UserPairs(userId='1', keyValuePairs=[KeyValuePair(key='hello', value='world')])])
 
     @endpoints.method(
-        ADD_PAIR_RESOURCE,
-        message_types.VoidMessage,
+        WRITE_USER_RESOURCE,
+        KeyValuePair,
         path='/',
         http_method='POST',
         name='addPair'
     )
     def addPair(self, request):
-        pass
+        """This works if you:
+         curl --request POST --url http://localhost:8080/api/alicia/v1/ --header 'content-type: application/json' --data '{"foo": "bar"}'"""
+        logging.info("Body is: %s" % request.__dict__)
+        return KeyValuePair(key="ECHO", value=request.foo)
+# {
+#   "userId": "string",
+#   "keyValuePairs": [
+#     {
+#       "key": "string",
+#       "value": "string"
+#     }
+#   ]
+# }
+
 
     @endpoints.method(
         GET_PAIR_RESOURCE,
