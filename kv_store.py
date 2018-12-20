@@ -3,9 +3,9 @@ import google
 
 
 class KVStore:
-    def __init__(self, namespace, id):
+    def __init__(self, namespace, user_id):
         db = firestore.Client()
-        self.doc_ref = db.collection(namespace).document(id)
+        self.doc_ref = db.collection(namespace).document(user_id)
 
     def overwrite(self, data):
         """Overwrites the document with the provided data"""

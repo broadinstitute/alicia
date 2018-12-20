@@ -13,3 +13,6 @@ libraries:
 handlers:
 - url: /api/.*
   script: main.api
+
+env_variables:
+  ENDPOINTS_SERVICE_NAME: broad-alicia-dev.appspot.com

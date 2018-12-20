@@ -3,6 +3,7 @@ from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
 import logging
+from alicia import Alicia
 
 
 class KeyValuePair(messages.Message):
@@ -38,6 +39,7 @@ GET_KEY_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1, re
 class AliciaAPI(remote.Service):
     def __init__(self):
         pass
+        self.alicia = Alicia()
 
     @endpoints.method(
         LIST_PAIRS_RESOURCE,
