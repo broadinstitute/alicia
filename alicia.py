@@ -25,3 +25,12 @@ class Alicia:
         kv_store_attrs = kv_store.read()
         pairs = kv_store_attrs.__dict__.get('_values')
         return {k: getattr(kv_store_attrs, k) for k in pairs.keys()}
+
+    @classmethod
+    def get_single_pair(cls, user_id, key, namespace="default"):
+        all_pairs = cls.get_all_pairs(user_id, namespace=namespace)
+        return all_pairs.get(key)
+
+    @classmethod
+    def delete_key(cls, user_id, key, namespace="default"):
+        pass 

@@ -84,8 +84,11 @@ class AliciaAPI(remote.Service):
         name='getKey'
     )
     def getKey(self, request):
-        pair = KeyValuePair(key=request.key, value='bar')
-        return UserPairSingle(userId=request.userId, keyValuePair=pair)
+        value = self.alicia.get_single_pair(request.userId, request.key)
+        if not value:
+            raise endpoints.NotFoundException("key {} not found".format(request.key))
+        else:
+            return UserPairSingle(userId=request.userId, keyValuePair=KeyValuePair(key=request.key, value=value))
 
     @endpoints.method(
         GET_KEY_RESOURCE,
