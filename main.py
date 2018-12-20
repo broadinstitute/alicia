@@ -29,9 +29,6 @@ LIST_PAIRS_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1)
                                                   key=messages.StringField(2),
                                                   value=messages.StringField(3))
 
-# TODO: this is supposed to be a json body, but should we give it a more specific schema?
-ADD_PAIR_RESOURCE = endpoints.ResourceContainer(body=JsonField(1))
-
 GET_PAIR_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1, required=True))
 
 GET_KEY_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1, required=True),
@@ -54,8 +51,8 @@ class AliciaAPI(remote.Service):
         return ListUserPairs(data=[UserPairs(userId='1', keyValuePairs=[KeyValuePair(key='hello', value='world')])])
 
     @endpoints.method(
-        WRITE_USER_RESOURCE,
-        KeyValuePair,
+        UserPairs,
+        UserPairs,
         path='/',
         http_method='POST',
         name='addPair'
@@ -63,8 +60,9 @@ class AliciaAPI(remote.Service):
     def addPair(self, request):
         """This works if you:
          curl --request POST --url http://localhost:8080/api/alicia/v1/ --header 'content-type: application/json' --data '{"foo": "bar"}'"""
-        logging.info("Body is: %s" % request.__dict__)
-        return KeyValuePair(key="ECHO", value=request.foo)
+        logging.info(request.userId)
+        logging.info(request.keyValuePairs)
+        return UserPairs(userId=request.userId, keyValuePairs=[KeyValuePair(key=p.key, value=p.value) for p in request.keyValuePairs])
 # {
 #   "userId": "string",
 #   "keyValuePairs": [
