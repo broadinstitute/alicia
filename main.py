@@ -73,7 +73,8 @@ class AliciaAPI(remote.Service):
     )
     def getPair(self, request):
         pairs = self.alicia.get_all_pairs(request.userId)
-        return UserPairs(userId=request.userId, keyValuePairs=[KeyValuePair(key=p.key, value=p.value) for p in pairs])
+        return UserPairs(userId=request.userId,
+                         keyValuePairs=[KeyValuePair(key=k, value=v) for k, v in pairs.iteritems()])
 
     @endpoints.method(
         GET_KEY_RESOURCE,

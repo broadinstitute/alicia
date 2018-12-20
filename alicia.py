@@ -21,8 +21,7 @@ class Alicia:
 
     @classmethod
     def get_all_pairs(cls, user_id, namespace="default"):
-        print('here!')
         kv_store = KVStore(namespace, user_id)
-        print kv_store
-        print(kv_store.read())
-        return []
+        kv_store_attrs = kv_store.read()
+        pairs = kv_store_attrs.__dict__.get('_values')
+        return {k: getattr(kv_store_attrs, k) for k in pairs.keys()}

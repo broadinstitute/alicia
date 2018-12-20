@@ -16,7 +16,7 @@ class KVStore:
         self.entity.put()
 
     def read(self):
-        return self.entity.get()
+        return self.storage_key.get()
 
     def query_by_key(self, key):
         return self.entity.query(self.entity.key == key)
