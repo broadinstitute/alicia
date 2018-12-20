@@ -18,3 +18,11 @@ class Alicia:
         for kv_pair in key_value_pairs:
             new_dict[kv_pair.key] = kv_pair.value
         return new_dict
+
+    @classmethod
+    def get_all_pairs(cls, user_id, namespace="default"):
+        print('here!')
+        kv_store = KVStore(namespace, user_id)
+        print kv_store
+        print(kv_store.read())
+        return []
