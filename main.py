@@ -5,10 +5,6 @@ from endpoints import remote
 import logging
 
 
-class JsonField(messages.StringField):
-    type = dict
-
-
 class KeyValuePair(messages.Message):
     key = messages.StringField(1)
     value = messages.StringField(2)
@@ -19,11 +15,14 @@ class UserPairs(messages.Message):
     keyValuePairs = messages.MessageField(KeyValuePair, 2, repeated=True)
 
 
-class ListUserPairs(messages.Message):
-    data = messages.MessageField(UserPairs, 1, repeated=True)
+class UserPairSingle(messages.Message):
+    userId = messages.StringField(1)
+    keyValuePair = messages.MessageField(KeyValuePair, 2)
 
 
-WRITE_USER_RESOURCE = endpoints.ResourceContainer(foo=messages.StringField(1))
+class UserPairsCollection(messages.Message):
+    items = messages.MessageField(UserPairs, 1, repeated=True)
+
 
 LIST_PAIRS_RESOURCE = endpoints.ResourceContainer(userId=messages.StringField(1),
                                                   key=messages.StringField(2),
@@ -42,13 +41,14 @@ class AliciaAPI(remote.Service):
 
     @endpoints.method(
         LIST_PAIRS_RESOURCE,
-        ListUserPairs,
+        UserPairsCollection,
         path='/',
         http_method='GET',
         name='listPairs'
     )
     def listPairs(self, request):
-        return ListUserPairs(data=[UserPairs(userId='1', keyValuePairs=[KeyValuePair(key='hello', value='world')])])
+        pairs = [UserPairs(userId='1', keyValuePairs=[KeyValuePair(key='hello', value='world')])]
+        return UserPairsCollection(items=pairs)
 
     @endpoints.method(
         UserPairs,
@@ -58,21 +58,8 @@ class AliciaAPI(remote.Service):
         name='addPair'
     )
     def addPair(self, request):
-        """This works if you:
-         curl --request POST --url http://localhost:8080/api/alicia/v1/ --header 'content-type: application/json' --data '{"foo": "bar"}'"""
-        logging.info(request.userId)
-        logging.info(request.keyValuePairs)
-        return UserPairs(userId=request.userId, keyValuePairs=[KeyValuePair(key=p.key, value=p.value) for p in request.keyValuePairs])
-# {
-#   "userId": "string",
-#   "keyValuePairs": [
-#     {
-#       "key": "string",
-#       "value": "string"
-#     }
-#   ]
-# }
-
+        return UserPairs(userId=request.userId, keyValuePairs=[KeyValuePair(key=p.key, value=p.value)
+                                                               for p in request.keyValuePairs])
 
     @endpoints.method(
         GET_PAIR_RESOURCE,
@@ -82,17 +69,19 @@ class AliciaAPI(remote.Service):
         name='getPair'
     )
     def getPair(self, request):
-        pass
+        pairs = [KeyValuePair(key='foo', value='bar')]
+        return UserPairs(userId=request.userId, keyValuePairs=[KeyValuePair(key=p.key, value=p.value) for p in pairs])
 
     @endpoints.method(
         GET_KEY_RESOURCE,
-        UserPairs,
+        UserPairSingle,
         path='/{userId}/{key}',
         http_method='GET',
         name='getKey'
     )
     def getKey(self, request):
-        pass
+        pair = KeyValuePair(key=request.key, value='bar')
+        return UserPairSingle(userId=request.userId, keyValuePair=pair)
 
     @endpoints.method(
         GET_KEY_RESOURCE,
@@ -102,6 +91,6 @@ class AliciaAPI(remote.Service):
         name='deleteKey'
     )
     def deleteKey(self, request):
-        pass
+        return message_types.VoidMessage()
 
 api = endpoints.api_server([AliciaAPI])
