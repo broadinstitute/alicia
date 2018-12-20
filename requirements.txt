@@ -3,4 +3,3 @@ google-endpoints-api-management==1.11.0
 google-cloud-firestore==0.31.0
 requests==2.21.0
 pyjwt==1.6.4
-google-cloud-firestore==0.31.0

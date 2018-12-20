@@ -60,6 +60,7 @@ class AliciaAPI(remote.Service):
         name='addPair'
     )
     def addPair(self, request):
+        self.alicia.add_pair(request.userId, request.keyValuePairs)
         return UserPairs(userId=request.userId, keyValuePairs=[KeyValuePair(key=p.key, value=p.value)
                                                                for p in request.keyValuePairs])
 
@@ -94,5 +95,6 @@ class AliciaAPI(remote.Service):
     )
     def deleteKey(self, request):
         return message_types.VoidMessage()
+
 
 api = endpoints.api_server([AliciaAPI])
