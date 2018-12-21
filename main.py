@@ -73,8 +73,11 @@ class AliciaAPI(remote.Service):
     )
     def getPair(self, request):
         pairs = self.alicia.get_all_pairs(request.userId)
-        return UserPairs(userId=request.userId,
-                         keyValuePairs=[KeyValuePair(key=k, value=v) for k, v in pairs.iteritems()])
+        if not pairs:
+            raise endpoints.NotFoundException("userId '{}' not found".format(request.userId))
+        else:
+            return UserPairs(userId=request.userId,
+                             keyValuePairs=[KeyValuePair(key=k, value=v) for k, v in pairs.iteritems()])
 
     @endpoints.method(
         GET_KEY_RESOURCE,
@@ -84,22 +87,36 @@ class AliciaAPI(remote.Service):
         name='getKey'
     )
     def getKey(self, request):
-        value = self.alicia.get_single_pair(request.userId, request.key)
-        if not value:
-            raise endpoints.NotFoundException("key {} not found".format(request.key))
+        pairs = self.alicia.get_all_pairs(request.userId)
+        if not pairs:
+            raise endpoints.NotFoundException("userId '{}' not found".format(request.key))
         else:
-            return UserPairSingle(userId=request.userId, keyValuePair=KeyValuePair(key=request.key, value=value))
+            value = self.alicia.get_single_pair(pairs, request.key)
+            if not value:
+                raise endpoints.NotFoundException("key '{0}' not found for userId '{1}'".format(request.key,
+                                                                                            request.userId))
+            else:
+                return UserPairSingle(userId=request.userId, keyValuePair=KeyValuePair(key=request.key, value=value))
 
     @endpoints.method(
         GET_KEY_RESOURCE,
-        message_types.VoidMessage,
+        UserPairSingle,
         path='/{userId}/{key}',
         http_method='DELETE',
         name='deleteKey'
     )
     def deleteKey(self, request):
-        self.alicia.delete_key(request.userId, request.key)
-        return message_types.VoidMessage()
+        pairs = self.alicia.get_all_pairs(request.userId)
+        if not pairs:
+            raise endpoints.NotFoundException("userId '{}' not found".format(request.key))
+        else:
+            value = self.alicia.get_single_pair(pairs, request.key)
+            if not value:
+                raise endpoints.NotFoundException("key '{0}' not found for userId '{1}'".format(request.key,
+                                                                                                request.userId))
+            else:
+                self.alicia.delete_key(request.userId, request.key)
+                return UserPairSingle(userId=request.userId, keyValuePair=KeyValuePair(key=request.key, value=value))
 
 
 api = endpoints.api_server([AliciaAPI])
