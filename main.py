@@ -98,6 +98,7 @@ class AliciaAPI(remote.Service):
         name='deleteKey'
     )
     def deleteKey(self, request):
+        self.alicia.delete_key(request.userId, request.key)
         return message_types.VoidMessage()
 
 

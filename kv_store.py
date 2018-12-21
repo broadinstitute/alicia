@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+import logging
 
 
 class AliciaEntity(ndb.Expando):
@@ -20,4 +21,10 @@ class KVStore:
 
     def query_by_key(self, key):
         return self.entity.query(self.entity.key == key)
+
+    def delete_key(self, key):
+        logging.info("Deleting key: %s" % key)
+        entity = self.read()
+        delattr(entity, key)
+        entity.put()
 

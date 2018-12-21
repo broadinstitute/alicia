@@ -33,4 +33,5 @@ class Alicia:
 
     @classmethod
     def delete_key(cls, user_id, key, namespace="default"):
-        pass 
+        kv_store = KVStore(namespace, user_id)
+        kv_store.delete_key(key)
