@@ -1,5 +1,5 @@
 import logging
-from kv_store import KVStore
+from kv_store import KVStore, AliciaEntity
 
 
 class Alicia:
@@ -37,3 +37,8 @@ class Alicia:
     def delete_key(cls, user_id, key, namespace="default"):
         kv_store = KVStore(namespace, user_id)
         kv_store.delete_key(key)
+
+    @classmethod
+    def get_all_items(cls, namespace="default"):
+        pass
+

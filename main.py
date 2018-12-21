@@ -49,6 +49,8 @@ class AliciaAPI(remote.Service):
         name='listPairs'
     )
     def listPairs(self, request):
+        self.alicia.get_all_items()
+
         pairs = [UserPairs(userId='1', keyValuePairs=[KeyValuePair(key='hello', value='world')])]
         return UserPairsCollection(items=pairs)
 

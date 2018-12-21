@@ -3,7 +3,9 @@ import logging
 
 
 class AliciaEntity(ndb.Expando):
-    pass
+    @classmethod
+    def get_all(cls):
+        return cls.query()
 
 
 class KVStore:
