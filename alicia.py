@@ -1,5 +1,5 @@
 import logging
-from kv_store import KVStore
+from kv_store import KVStore, AliciaEntity
 
 
 class Alicia:
@@ -23,15 +23,22 @@ class Alicia:
     def get_all_pairs(cls, user_id, namespace="default"):
         kv_store = KVStore(namespace, user_id)
         kv_store_attrs = kv_store.read()
-        pairs = kv_store_attrs.__dict__.get('_values')
-        return {k: getattr(kv_store_attrs, k) for k in pairs.keys()}
+        if not kv_store_attrs:
+            return {}
+        else:
+            pairs = kv_store_attrs.__dict__.get('_values')
+            return {k: getattr(kv_store_attrs, k) for k in pairs.keys()}
 
     @classmethod
-    def get_single_pair(cls, user_id, key, namespace="default"):
-        all_pairs = cls.get_all_pairs(user_id, namespace=namespace)
+    def get_single_pair(cls, all_pairs, key):
         return all_pairs.get(key)
 
     @classmethod
     def delete_key(cls, user_id, key, namespace="default"):
         kv_store = KVStore(namespace, user_id)
         kv_store.delete_key(key)
+
+    @classmethod
+    def get_all_items(cls, namespace="default"):
+        pass
+

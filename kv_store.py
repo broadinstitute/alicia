@@ -3,7 +3,9 @@ import logging
 
 
 class AliciaEntity(ndb.Expando):
-    pass
+    @classmethod
+    def get_all(cls):
+        return cls.query()
 
 
 class KVStore:
@@ -18,9 +20,6 @@ class KVStore:
 
     def read(self):
         return self.storage_key.get()
-
-    def query_by_key(self, key):
-        return self.entity.query(self.entity.key == key)
 
     def delete_key(self, key):
         logging.info("Deleting key: %s" % key)
